@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industrial AI Assistant Invitation</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f4f6fb;
+      color: #111827;
+      font-family: "Segoe UI", Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(520px, 100%);
+      background: #ffffff;
+      border-radius: 26px;
+      padding: 30px;
+      box-shadow: 0 24px 70px rgba(17, 24, 39, 0.16);
+    }
+    .logo {
+      display: block;
+      max-width: 270px;
+      width: 78%;
+      height: auto;
+      margin: 0 auto 28px;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: 32px;
+      line-height: 1.16;
+      font-weight: 750;
+    }
+    p {
+      margin: 0 0 14px;
+      font-size: 20px;
+      line-height: 1.45;
+    }
+    .muted {
+      color: #5f6675;
+      font-size: 16px;
+      word-break: break-word;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    button, a.button {
+      border: 0;
+      border-radius: 999px;
+      background: #2474f5;
+      color: white;
+      padding: 14px 22px;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      text-align: center;
+      flex: 1 1 190px;
+    }
+    a.secondary {
+      background: #eef3ff;
+      color: #1f5fcf;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card" id="inviteCard">
+    <img src="/logo.png" alt="Servo Coil Technologies" class="logo">
+    <h1>Проверьте приглашение</h1>
+    <p>Вас пригласили в диагностический чат Industrial AI Assistant.</p>
+    <p>Доступ: только этот чат.</p>
+    <p class="muted" id="inviteLink"></p>
+    <div class="actions">
+      <button type="button" id="openAppButton">Открыть в приложении</button>
+      <a class="button secondary" href="/">На главную</a>
+    </div>
+    <p class="muted" style="margin-top:22px;">Если приложение не открылось, установите Industrial AI Assistant или откройте эту ссылку с телефона.</p>
+  </main>
+
+  <main class="card hidden" id="notFoundCard">
+    <img src="/logo.png" alt="Servo Coil Technologies" class="logo">
+    <h1>Страница не найдена</h1>
+    <p class="muted">Проверьте ссылку или вернитесь на главную страницу.</p>
+    <div class="actions">
+      <a class="button" href="/">На главную</a>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var token = params.get("token") || "";
+      var parts = window.location.pathname.split("/").filter(Boolean);
+      var inviteIndex = parts.indexOf("invite");
+      var isInvitePath = inviteIndex >= 0;
+      var caseId = isInvitePath && parts[inviteIndex + 1] ? parts[inviteIndex + 1] : "";
+
+      if (!isInvitePath || !token) {
+        document.getElementById("inviteCard").classList.add("hidden");
+        document.getElementById("notFoundCard").classList.remove("hidden");
+        return;
+      }
+
+      var encodedCase = encodeURIComponent(caseId);
+      var encodedToken = encodeURIComponent(token);
+      var appUrl = "axiom://invite/" + encodedCase + "?token=" + encodedToken;
+      var fallbackUrl = window.location.href;
+      var intentUrl = "intent://invite/" + encodedCase + "?token=" + encodedToken +
+        "#Intent;scheme=axiom;package=com.industrialai.assistant;S.browser_fallback_url=" +
+        encodeURIComponent(fallbackUrl) + ";end";
+
+      document.getElementById("inviteLink").textContent = "Ссылка: " + fallbackUrl;
+      document.getElementById("openAppButton").addEventListener("click", function () {
+        if (/Android/i.test(navigator.userAgent)) {
+          window.location.href = intentUrl;
+        } else {
+          window.location.href = appUrl;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
