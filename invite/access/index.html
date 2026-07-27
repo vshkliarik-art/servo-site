@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Industrial AI Assistant - Chat Invite</title>
+  <title>Industrial AI Assistant - Access Invite</title>
   <style>
     :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; }
     body { margin: 0; min-height: 100vh; background: #f4f6fb; color: #101827; display: grid; place-items: center; padding: 24px; }
@@ -19,23 +19,23 @@
 <body>
   <main class="card">
     <img class="logo" src="/logo.png" alt="Industrial AI Assistant">
-    <h1>Приглашение в диагностический чат</h1>
-    <p>Вас пригласили в диагностический чат Industrial AI Assistant.</p>
-    <p><strong>Доступ:</strong> только этот чат.</p>
+    <h1>Приглашение в систему</h1>
+    <p>Вас пригласили в Industrial AI Assistant как участника системы.</p>
+    <p><strong>Это не приглашение в чат.</strong> Роль и права будут применены после принятия в приложении.</p>
     <div class="meta" id="inviteDetails">Проверяем ссылку...</div>
     <button class="button" id="openApp">Открыть в приложении</button>
-    <p class="secondary">Если приложение не открылось, установите Industrial AI Assistant и снова нажмите кнопку.</p>
+    <p class="secondary">Если приложение уже установлено, оно откроет окно принятия приглашения. Если не открылось, установите приложение и нажмите кнопку снова.</p>
   </main>
   <script>
     const params = new URLSearchParams(location.search);
     const token = params.get('token') || '';
     const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
-    const inviteId = parts[1] || params.get('id') || '';
+    const inviteId = parts[2] || params.get('id') || '';
     const appParams = new URLSearchParams();
     if (token) appParams.set('token', token);
-    appParams.set('invite_type', 'chat');
-    appParams.set('invite_scope', 'chat_only');
-    const appLink = `axiom://invite/${encodeURIComponent(inviteId)}${appParams.toString() ? '?' + appParams.toString() : ''}`;
+    appParams.set('invite_type', 'app_access');
+    appParams.set('invite_scope', 'workspace_access');
+    const appLink = `axiom://invite/access/${encodeURIComponent(inviteId)}${appParams.toString() ? '?' + appParams.toString() : ''}`;
     document.getElementById('inviteDetails').textContent = inviteId ? `ID приглашения: ${inviteId}` : 'В ссылке нет ID приглашения.';
     document.getElementById('openApp').addEventListener('click', () => { location.href = appLink; });
   </script>

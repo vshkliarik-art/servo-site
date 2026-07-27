@@ -1,145 +1,64 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Industrial AI Assistant Invitation</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Industrial AI Assistant - Invite</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #f4f6fb;
-      color: #111827;
-      font-family: "Segoe UI", Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .card {
-      width: min(520px, 100%);
-      background: #ffffff;
-      border-radius: 26px;
-      padding: 30px;
-      box-shadow: 0 24px 70px rgba(17, 24, 39, 0.16);
-    }
-    .logo {
-      display: block;
-      max-width: 270px;
-      width: 78%;
-      height: auto;
-      margin: 0 auto 28px;
-    }
-    h1 {
-      margin: 0 0 18px;
-      font-size: 32px;
-      line-height: 1.16;
-      font-weight: 750;
-    }
-    p {
-      margin: 0 0 14px;
-      font-size: 20px;
-      line-height: 1.45;
-    }
-    .muted {
-      color: #5f6675;
-      font-size: 16px;
-      word-break: break-word;
-    }
-    .linkbox {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f3f6fd;
-      color: #3f4655;
-      font-size: 15px;
-      line-height: 1.35;
-      word-break: break-word;
-    }
-    .actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-    }
-    button, a.button {
-      border: 0;
-      border-radius: 999px;
-      background: #2474f5;
-      color: white;
-      padding: 14px 22px;
-      font-size: 17px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      text-align: center;
-      flex: 1 1 190px;
-    }
-    a.secondary {
-      background: #eef3ff;
-      color: #1f5fcf;
-    }
-    .hidden { display: none; }
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; }
+    body { margin: 0; min-height: 100vh; background: #f4f6fb; color: #101827; display: grid; place-items: center; padding: 24px; }
+    .card { width: min(560px, 100%); background: #fff; border-radius: 24px; padding: 28px; box-shadow: 0 18px 55px rgba(16, 24, 39, .14); }
+    .logo { width: 220px; max-width: 80%; display: block; margin-bottom: 28px; }
+    h1 { font-size: 30px; line-height: 1.15; margin: 0 0 14px; }
+    p { font-size: 18px; line-height: 1.45; margin: 0 0 16px; }
+    .meta { background: #f3f6fb; border-radius: 16px; padding: 16px; margin: 22px 0; font-size: 15px; word-break: break-all; }
+    .button { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; padding: 15px 22px; min-width: 220px; background: #2872f0; color: #fff; font-weight: 700; font-size: 17px; text-decoration: none; cursor: pointer; }
+    .secondary { color: #536173; font-size: 14px; margin-top: 18px; }
   </style>
 </head>
 <body>
-  <main class="card" id="inviteCard">
-    <img src="/logo.png" alt="Servo Coil Technologies" class="logo">
-    <h1>Проверьте приглашение</h1>
-    <p>Вас пригласили в диагностический чат Industrial AI Assistant.</p>
-    <p>Доступ: только этот чат.</p>
-    <div class="linkbox" id="inviteLink"></div>
-    <div class="actions">
-      <button type="button" id="openAppButton">Открыть в приложении</button>
-      <a class="button secondary" href="/">На главную</a>
-    </div>
-    <p class="muted" style="margin-top:22px;">Если приложение не открылось, проверьте что Industrial AI Assistant установлен, и откройте ссылку с телефона.</p>
+  <main class="card">
+    <img class="logo" src="/logo.png" alt="Industrial AI Assistant">
+    <h1 id="title">Приглашение Industrial AI Assistant</h1>
+    <p id="description">Проверяем ссылку приглашения.</p>
+    <p id="access"></p>
+    <div class="meta" id="inviteDetails">Проверяем ссылку...</div>
+    <button class="button" id="openApp">Открыть в приложении</button>
+    <p class="secondary" id="hint">Если приложение не открылось, установите Industrial AI Assistant и снова нажмите кнопку.</p>
   </main>
-
-  <main class="card hidden" id="notFoundCard">
-    <img src="/logo.png" alt="Servo Coil Technologies" class="logo">
-    <h1>Страница не найдена</h1>
-    <p class="muted">Проверьте ссылку или вернитесь на главную страницу.</p>
-    <div class="actions">
-      <a class="button" href="/">На главную</a>
-    </div>
-  </main>
-
   <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var token = params.get("token") || "";
-      var caseFromQuery = params.get("case") || "";
-      var parts = window.location.pathname.split("/").filter(Boolean);
-      var inviteIndex = parts.indexOf("invite");
-      var isInvitePath = inviteIndex >= 0;
-      var caseId = caseFromQuery || (isInvitePath && parts[inviteIndex + 1] ? parts[inviteIndex + 1] : "");
-
-      if (!isInvitePath || !token) {
-        document.getElementById("inviteCard").classList.add("hidden");
-        document.getElementById("notFoundCard").classList.remove("hidden");
-        return;
-      }
-
-      var encodedCase = encodeURIComponent(caseId);
-      var encodedToken = encodeURIComponent(token);
-      var appUrl = "axiom://invite/" + encodedCase + "?token=" + encodedToken;
-      var fallbackUrl = window.location.href;
-      var intentUrl = "intent://invite/" + encodedCase + "?token=" + encodedToken +
-        "#Intent;scheme=axiom;package=com.industrialai.assistant;S.browser_fallback_url=" +
-        encodeURIComponent(fallbackUrl) + ";end";
-
-      document.getElementById("inviteLink").textContent = "Это приглашение открывает только один диагностический чат. Ссылка будет передана приложению автоматически.";
-      document.getElementById("openAppButton").addEventListener("click", function () {
-        if (/Android/i.test(navigator.userAgent)) {
-          window.location.href = intentUrl;
-        } else {
-          window.location.href = appUrl;
-        }
-      });
-    })();
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token') || '';
+    const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
+    const isAccess = parts[0] === 'invite' && parts[1] === 'access';
+    const isChat = parts[0] === 'invite' && !isAccess;
+    const inviteId = isAccess ? (parts[2] || params.get('id') || '') : (parts[1] || params.get('id') || '');
+    if (isAccess) {
+      document.getElementById('title').textContent = 'Приглашение в систему';
+      document.getElementById('description').textContent = 'Вас пригласили в Industrial AI Assistant как участника системы.';
+      document.getElementById('access').innerHTML = '<strong>Это не приглашение в чат.</strong> Роль и права будут применены после принятия в приложении.';
+    } else if (isChat) {
+      document.getElementById('title').textContent = 'Приглашение в диагностический чат';
+      document.getElementById('description').textContent = 'Вас пригласили в диагностический чат Industrial AI Assistant.';
+      document.getElementById('access').innerHTML = '<strong>Доступ:</strong> только этот чат.';
+    } else {
+      document.getElementById('title').textContent = 'Страница не найдена';
+      document.getElementById('description').textContent = 'Эта ссылка не похожа на приглашение Industrial AI Assistant.';
+      document.getElementById('openApp').style.display = 'none';
+      document.getElementById('inviteDetails').textContent = location.pathname;
+    }
+    const appParams = new URLSearchParams();
+    if (token) appParams.set('token', token);
+    if (isAccess) {
+      appParams.set('invite_type', 'app_access');
+      appParams.set('invite_scope', 'workspace_access');
+    } else {
+      appParams.set('invite_type', 'chat');
+      appParams.set('invite_scope', 'chat_only');
+    }
+    const appLink = `axiom://invite${isAccess ? '/access' : ''}/${encodeURIComponent(inviteId)}${appParams.toString() ? '?' + appParams.toString() : ''}`;
+    if (isChat || isAccess) document.getElementById('inviteDetails').textContent = inviteId ? `ID приглашения: ${inviteId}` : 'В ссылке нет ID приглашения.';
+    document.getElementById('openApp').addEventListener('click', () => { location.href = appLink; });
   </script>
 </body>
 </html>
-
