@@ -47,6 +47,16 @@
       font-size: 16px;
       word-break: break-word;
     }
+    .linkbox {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f3f6fd;
+      color: #3f4655;
+      font-size: 15px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
     .actions {
       display: flex;
       gap: 12px;
@@ -79,12 +89,12 @@
     <h1>Проверьте приглашение</h1>
     <p>Вас пригласили в диагностический чат Industrial AI Assistant.</p>
     <p>Доступ: только этот чат.</p>
-    <p class="muted" id="inviteLink"></p>
+    <div class="linkbox" id="inviteLink"></div>
     <div class="actions">
       <button type="button" id="openAppButton">Открыть в приложении</button>
       <a class="button secondary" href="/">На главную</a>
     </div>
-    <p class="muted" style="margin-top:22px;">Если приложение не открылось, установите Industrial AI Assistant или откройте эту ссылку с телефона.</p>
+    <p class="muted" style="margin-top:22px;">Если приложение не открылось, проверьте что Industrial AI Assistant установлен, и откройте ссылку с телефона.</p>
   </main>
 
   <main class="card hidden" id="notFoundCard">
@@ -100,10 +110,11 @@
     (function () {
       var params = new URLSearchParams(window.location.search);
       var token = params.get("token") || "";
+      var caseFromQuery = params.get("case") || "";
       var parts = window.location.pathname.split("/").filter(Boolean);
       var inviteIndex = parts.indexOf("invite");
       var isInvitePath = inviteIndex >= 0;
-      var caseId = isInvitePath && parts[inviteIndex + 1] ? parts[inviteIndex + 1] : "";
+      var caseId = caseFromQuery || (isInvitePath && parts[inviteIndex + 1] ? parts[inviteIndex + 1] : "");
 
       if (!isInvitePath || !token) {
         document.getElementById("inviteCard").classList.add("hidden");
@@ -119,7 +130,7 @@
         "#Intent;scheme=axiom;package=com.industrialai.assistant;S.browser_fallback_url=" +
         encodeURIComponent(fallbackUrl) + ";end";
 
-      document.getElementById("inviteLink").textContent = "Ссылка: " + fallbackUrl;
+      document.getElementById("inviteLink").textContent = "Это приглашение открывает только один диагностический чат. Ссылка будет передана приложению автоматически.";
       document.getElementById("openAppButton").addEventListener("click", function () {
         if (/Android/i.test(navigator.userAgent)) {
           window.location.href = intentUrl;
