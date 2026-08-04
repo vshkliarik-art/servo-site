@@ -1,43 +1,32 @@
-﻿<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Industrial AI Assistant - Chat Invite</title>
-  <style>
-    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; }
-    body { margin: 0; min-height: 100vh; background: #f4f6fb; color: #101827; display: grid; place-items: center; padding: 24px; }
-    .card { width: min(560px, 100%); background: #fff; border-radius: 24px; padding: 28px; box-shadow: 0 18px 55px rgba(16, 24, 39, .14); }
-    .logo { width: 220px; max-width: 80%; display: block; margin-bottom: 28px; }
-    h1 { font-size: 30px; line-height: 1.15; margin: 0 0 14px; }
-    p { font-size: 18px; line-height: 1.45; margin: 0 0 16px; }
-    .meta { background: #f3f6fb; border-radius: 16px; padding: 16px; margin: 22px 0; font-size: 15px; word-break: break-all; }
-    .button { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; padding: 15px 22px; min-width: 220px; background: #2872f0; color: #fff; font-weight: 700; font-size: 17px; text-decoration: none; cursor: pointer; }
-    .secondary { color: #536173; font-size: 14px; margin-top: 18px; }
-  </style>
-</head>
-<body>
-  <main class="card">
-    <img class="logo" src="/logo.png" alt="Industrial AI Assistant">
-    <h1>Приглашение в диагностический чат</h1>
-    <p>Вас пригласили в диагностический чат Industrial AI Assistant.</p>
-    <p><strong>Доступ:</strong> только этот чат.</p>
-    <div class="meta" id="inviteDetails">Проверяем ссылку...</div>
-    <button class="button" id="openApp">Открыть в приложении</button>
-    <p class="secondary">Если приложение не открылось, установите Industrial AI Assistant и снова нажмите кнопку.</p>
-  </main>
-  <script>
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token') || '';
-    const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
-    const inviteId = parts[1] || params.get('id') || '';
-    const appParams = new URLSearchParams();
-    if (token) appParams.set('token', token);
-    appParams.set('invite_type', 'chat');
-    appParams.set('invite_scope', 'chat_only');
-    const appLink = `axiom://invite/${encodeURIComponent(inviteId)}${appParams.toString() ? '?' + appParams.toString() : ''}`;
-    document.getElementById('inviteDetails').textContent = inviteId ? `ID приглашения: ${inviteId}` : 'В ссылке нет ID приглашения.';
-    document.getElementById('openApp').addEventListener('click', () => { location.href = appLink; });
-  </script>
-</body>
-</html>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Industrial AI Assistant - Chat Invitation</title><style>
+:root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; }
+body { margin:0; min-height:100vh; background:#f4f6fb; color:#101827; display:grid; place-items:center; padding:24px; }
+.card { width:min(560px,100%); background:#fff; border-radius:24px; padding:28px; box-shadow:0 18px 55px rgba(16,24,39,.14); }
+.logo { width:220px; max-width:80%; display:block; margin:0 0 28px; }
+h1 { font-size:30px; line-height:1.15; margin:0 0 14px; }
+p { font-size:18px; line-height:1.45; margin:0 0 16px; }
+.button { display:inline-flex; align-items:center; justify-content:center; border:0; border-radius:999px; padding:15px 22px; min-width:220px; background:#2872f0; color:#fff; font-weight:700; font-size:17px; text-decoration:none; cursor:pointer; }
+.secondary { color:#536173; font-size:14px; margin-top:18px; }
+</style></head>
+<body><main class="card">
+<img class="logo" src="/logo.png" alt="Servo Coil Technologies">
+<h1>Chat invitation</h1>
+<p>You have been invited to an Industrial AI Assistant chat.</p>
+<p>Open the invitation in the app to continue.</p>
+<button class="button" id="openApp">Open in app</button>
+<p class="secondary">If the app is not installed, install Industrial AI Assistant and open this link again.</p>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get('token') || '';
+const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
+const inviteId = parts[1] || params.get('id') || '';
+const appParams = new URLSearchParams();
+if (token) appParams.set('token', token);
+appParams.set('invite_type', 'chat');
+appParams.set('invite_scope', 'chat_only');
+const appLink = `axiom://invite/${encodeURIComponent(inviteId)}${appParams.toString() ? '?' + appParams.toString() : ''}`;
+document.getElementById('openApp').addEventListener('click', () => { location.href = appLink; });
+</script></body></html>
